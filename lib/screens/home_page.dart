@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:new_article_tasks/core/service_locatory.dart';
-import 'package:new_article_tasks/model/aticle_model.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:new_article_tasks/bloc/article_bloc.dart';
+import 'package:new_article_tasks/views/custom_sliver_box.dart';
+import 'package:new_article_tasks/views/custom_sliver_list.dart';
+import 'package:new_article_tasks/views/text_widget.dart';
+import '../service/icons.dart';
+import 'new_article.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -11,22 +16,61 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Article> list = [];
   @override
   void initState() {
     super.initState();
-    fetchData();
+    context.read<ArticleBloc>().add(const GetLatestArticlesEvent());
   }
-  void fetchData()async{
-    list = await repository.getLatestArticles();
-    print("=====> fetchData => ${list.length}");
-  }
-
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text("NO Data",style: TextStyle(fontSize: 30),),),
+    return BlocBuilder<ArticleBloc, ArticleState>(
+      builder: (context, state) {
 
+        return Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              onPressed: () {},
+              icon: KTIcons.arrowBack,
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const NewArticle()));
+                  }, child: KTextWidget.notificationTextWidget),
+              TextButton(
+                onPressed: () {
+                  context.read<ArticleBloc>().add(
+                        const GetReadArticlesEvent(),
+                      );
+                },
+                child: KTextWidget.marcAllReadTextWidget,
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+            ],
+          ),
+          body: Stack(
+            children: [
+              CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: CustomSliverBox(article: state.items),
+                  ),
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                        childCount: state.items.length,
+                            (context, i) {
+                      final data = state.items[i];
+                      return CustomSliverList(state: state, data: data);
+                    }),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

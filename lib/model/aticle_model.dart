@@ -1,6 +1,6 @@
 
 class Article {
-  const Article({
+    const  Article({
     required this.id,
     required this.title,
     required this.publicationDate,
@@ -15,4 +15,5 @@ class Article {
   final String imageUrl;
   final bool readed;
   final String? description;
+
 }
