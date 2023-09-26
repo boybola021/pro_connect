@@ -59,7 +59,7 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
       emit(const ArticleLoadingState(items: []));
       Article data = await repository.getArticle(event.id);
       if(data != null){
-        emit(GetArticleState(items: [],article: data));
+        emit(GetArticleState(items: [...state.items],article: data));
         log("GetArticleEvent => $data");
       }else{
         emit(ArticleFailureState(items: [...state.items], message: "No data"));

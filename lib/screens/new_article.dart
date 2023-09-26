@@ -52,12 +52,7 @@ class _NewArticleState extends State<NewArticle> {
                       borderRadius:
                       BorderRadius.all(Radius.circular(10)),
                     ),
-                    child: Expanded(
-                      child: Image.network(data.imageUrl,
-                        errorBuilder: (error,child,__){
-                          return const CircularProgressIndicator.adaptive();
-                        },),
-                    ),
+                    child: Image.network(data.imageUrl,),
                   ),
                   title: TextVerticalTitleWidget(
                     title: data.title,

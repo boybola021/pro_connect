@@ -52,20 +52,22 @@ class _HomePageState extends State<HomePage> {
           ),
           body: Stack(
             children: [
-              CustomScrollView(
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: CustomSliverBox(article: state.items),
-                  ),
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                        childCount: state.items.length,
-                            (context, i) {
-                      final data = state.items[i];
-                      return CustomSliverList(state: state, data: data);
-                    }),
-                  ),
-                ],
+              SizedBox(
+                child: state.items.isNotEmpty? CustomScrollView(
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: CustomSliverBox(article: state.items),
+                    ),
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                          childCount: state.items.length,
+                              (context, i) {
+                        final data = state.items[i];
+                        return CustomSliverList(state: state, data: data);
+                      }),
+                    ),
+                  ],
+                ) : const Center(child: CircularProgressIndicator.adaptive(),),
               ),
             ],
           ),
